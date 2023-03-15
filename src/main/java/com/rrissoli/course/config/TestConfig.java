@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.rrissoli.course.entities.Category;
 import com.rrissoli.course.entities.Order;
+import com.rrissoli.course.entities.OrderItem;
 import com.rrissoli.course.entities.Product;
 import com.rrissoli.course.entities.User;
 import com.rrissoli.course.entities.enums.OrderStatus;
 import com.rrissoli.course.repositories.CategoryRepository;
+import com.rrissoli.course.repositories.OrderItemRepository;
 import com.rrissoli.course.repositories.OrderRepository;
 import com.rrissoli.course.repositories.ProductRepository;
 import com.rrissoli.course.repositories.UserRepository;
@@ -21,6 +23,7 @@ import com.rrissoli.course.repositories.UserRepository;
 @Configuration
 @Profile("test")
 public class TestConfig implements  CommandLineRunner  {
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -29,6 +32,8 @@ public class TestConfig implements  CommandLineRunner  {
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 	@Override
 	public void run(String... args) throws Exception {
 		Category cat1 = new Category(null, "Electronics");
@@ -57,5 +62,10 @@ public class TestConfig implements  CommandLineRunner  {
 		p4.getCategories().add(cat3);
 		p5.getCategories().add(cat2);
 		productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
+		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+		OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+		OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
 	}
 }

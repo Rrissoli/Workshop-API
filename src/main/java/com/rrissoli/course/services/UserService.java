@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rrissoli.course.entities.User;
 import com.rrissoli.course.repositories.UserRepository;
+import com.rrissoli.course.services.exceptions.DataBaseException;
 import com.rrissoli.course.services.exceptions.ResourceNotFoundExceptions;
 
 
@@ -27,7 +29,15 @@ public class UserService {
 		return repository.save(obj);
 	}
 	public void Delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundExceptions(id);
+			
+		}catch (DataBaseException e) {
+			throw new DataBaseException(e.getMessage());
+		}
+		
 	}
 	public User update ( Long id, User obj) {
 		User entity = repository.getReferenceById(id);
